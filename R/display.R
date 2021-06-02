@@ -112,7 +112,7 @@ print.JD3LIKELIHOOD<-function(ll){
   cat("Number of effective observations: ", ll$neffectiveobs, "\n")
   cat("Number of parameters: ", ll$nparams, "\n\n")
   cat("Loglikelihood: ", ll$ll, "\n")
-  if (ll$ll != ll$adjll)cat("Adjusted loglikelihood: ", ll$adjll, "\n\n")
+  if (ll$ll != ll$adjll)cat("Adjusted loglikelihood: ", ll$adjustedll, "\n\n")
   cat("Standard error of the regression (ML estimate): ", sqrt(ll$ssq/ll$neffectiveobs), "\n")
   cat("AIC: ", ll$aic, "\n")
   cat("AICC: ", ll$aicc, "\n")
