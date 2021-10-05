@@ -9,13 +9,13 @@ NULL
 #' @export
 #'
 #' @examples
-print.JD3ARIMA<-function(m){
-  if (m$innovationvariance > 0 || length(m$delta)>1){
+print.JD3_ARIMA<-function(m){
+  if (m$var > 0 || length(m$delta)>1){
     cat(m$name, "\n\n")
     if (length(m$ar)>1) cat("AR: ", m$ar, "\n")
     if (length(m$delta)>1)cat("DIF: ", m$delta, "\n")
     if (length(m$ma)>1)cat("MA: ", m$ma, "\n")
-    cat("var: ", m$innovationvariance, "\n\n")
+    cat("var: ", m$var, "\n\n")
   }
 }
 
@@ -28,7 +28,7 @@ print.JD3ARIMA<-function(m){
 #' @export
 #'
 #' @examples
-print.JD3UCARIMA<-function(ucm){
+print.JD3_UCARIMA<-function(ucm){
   print(ucm$model)
   lapply(ucm$components, function(z){print(z)})
 }
@@ -46,7 +46,7 @@ arima_node<-function(p,d,q){
 #' @export
 #'
 #' @examples
-print.JD3SARIMA<-function(m){
+print.JD3_SARIMA<-function(m){
   cat("SARIMA model: ", arima_node(m$p, m$d, m$q), arima_node(m$bp, m$bd, m$bq), "\n")
 
   cat("\ncoefficients\n")
@@ -71,6 +71,36 @@ print.JD3SARIMA<-function(m){
   }
 }
 
+#' Title
+#'
+#' @param m
+#'
+#' @return
+#' @export
+#'
+#' @examples
+print.JD3_SARIMA_ESTIMATION<-function(m){
+
+  if (! is.null(m$phi)) p<-dim(m$phi)[2]else p<-0
+  if (! is.null(m$theta)) q<-dim(m$theta)[2]else q<-0
+  if (! is.null(m$bphi)) bp<-dim(m$bphi)[2]else bp<-0
+  if (! is.null(m$btheta)) bq<-dim(m$btheta)[2]else bq<-0
+
+
+  cat("SARIMA model: ", arima_node(p, m$d, q), arima_node(bp, m$bd, bq), "\n")
+
+  cat("\ncoefficients\n")
+  names<-NULL
+  if (p > 0){names=c(names,paste0("phi(", 1:p, ')')) }
+  if (q > 0){names=c(names,paste0("theta(", 1:q, ')')) }
+  if (bp > 0){names=c(names,paste0("bphi(", 1:bp, ')')) }
+  if (bq > 0){names=c(names,paste0("btheta(", 1:bq,')')) }
+  if (! is.null(names)){
+    all<-t(cbind(m$phi, m$theta, m$bphi, m$btheta))
+    fr<-data.frame(coef=all, row.names = names)
+    print(fr)
+  }
+}
 
 #' Title
 #'
@@ -80,7 +110,7 @@ print.JD3SARIMA<-function(m){
 #' @export
 #'
 #' @examples
-print.JD3SPAN<-function(span){
+print.JD3_SPAN<-function(span){
   type<-span$type
   d0<-span$d0
   d1<-span$d1
@@ -107,12 +137,12 @@ print.JD3SPAN<-function(span){
 #' @export
 #'
 #' @examples
-print.JD3LIKELIHOOD<-function(ll){
+print.JD3_LIKELIHOOD<-function(ll){
   cat("Number of observations: ", ll$nobs, "\n")
   cat("Number of effective observations: ", ll$neffectiveobs, "\n")
   cat("Number of parameters: ", ll$nparams, "\n\n")
   cat("Loglikelihood: ", ll$ll, "\n")
-  if (ll$ll != ll$adjll)cat("Adjusted loglikelihood: ", ll$adjustedll, "\n\n")
+  if (ll$ll != ll$adjustedll)cat("Adjusted loglikelihood: ", ll$adjustedll, "\n\n")
   cat("Standard error of the regression (ML estimate): ", sqrt(ll$ssq/ll$neffectiveobs), "\n")
   cat("AIC: ", ll$aic, "\n")
   cat("AICC: ", ll$aicc, "\n")
@@ -127,18 +157,21 @@ print.JD3LIKELIHOOD<-function(ll){
 #' @export
 #'
 #' @examples
-print.JD3REGARIMA_RSLTS<-function(q){
-
-  regs<-do.call("rbind", lapply(q$description$variables, function(z){z$coeff}))
-  xregs<-cbind(regs, stde=NA, t=NA, pvalue=NA)
-  stde<-sqrt(diag(q$estimation$bvar))
-  sel<-xregs$type=='ESTIMATED'
-  t<-xregs$value[sel]/stde
-  ndf<-q$estimation$likelihood$neffectiveobs-q$estimation$likelihood$nparams+1
-  pval<-2*pt(abs(t), ndf, lower.tail = F)
-  xregs$stde[sel]<-stde
-  xregs$t[sel]<-t
-  xregs$pvalue[sel]<-pval
-  print(xregs[-2])
+print.JD3_REGARIMA_RSLTS<-function(q){
+  if (length(q$description$variables)>0){
+    regs<-do.call("rbind", lapply(q$description$variables, function(z){z$coeff}))
+    xregs<-cbind(regs, stde=NA, t=NA, pvalue=NA)
+    stde<-sqrt(diag(q$estimation$bvar))
+    sel<-xregs$type=='ESTIMATED'
+    t<-xregs$value[sel]/stde
+    ndf<-q$estimation$likelihood$neffectiveobs-q$estimation$likelihood$nparams+1
+    pval<-2*pt(abs(t), ndf, lower.tail = F)
+    xregs$stde[sel]<-stde
+    xregs$t[sel]<-t
+    xregs$pvalue[sel]<-pval
+    print(xregs[-2])
+  }else{
+    cat("No regression variables\n")
+  }
 }
 
