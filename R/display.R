@@ -1,5 +1,6 @@
-#' @include utils.R
+#' @importFrom stats pt
 NULL
+
 
 #' Title
 #'
