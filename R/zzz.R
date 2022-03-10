@@ -1,5 +1,5 @@
 
 .onLoad <- function(libname, pkgname) {
-  loadNamespace("rjd3modelling")
+  if (! requireNamespace("rjd3modelling", quietly = T)) stop("Loading rjd3 libraries failed")
 }
 
