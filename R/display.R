@@ -28,6 +28,7 @@ print.JD3_UCARIMA<-function(x,...){
   ucm <- x
   print(ucm$model)
   lapply(ucm$components, function(z){print(z)})
+  invisible(x)
 }
 
 arima_node<-function(p,d,q){
