@@ -2,15 +2,15 @@
 NULL
 
 
-#' Title
+#' JD3 print functions
 #'
-#' @param m
-#'
-#' @return
+#' @param x the object to print.
+#' @param ... further unused parameters.
+#' @name jd3_print
+#' @rdname jd3_print
 #' @export
-#'
-#' @examples
-print.JD3_ARIMA<-function(m){
+print.JD3_ARIMA<-function(x, ...){
+  m <- x
   if (m$var > 0 || length(m$delta)>1){
     cat(m$name, "\n\n")
     if (length(m$ar)>1) cat("AR: ", m$ar, "\n")
@@ -18,18 +18,14 @@ print.JD3_ARIMA<-function(m){
     if (length(m$ma)>1)cat("MA: ", m$ma, "\n")
     cat("var: ", m$var, "\n\n")
   }
+  invisible(x)
 }
 
 
-#' Title
-#'
-#' @param ucm
-#'
-#' @return
+#' @rdname jd3_print
 #' @export
-#'
-#' @examples
-print.JD3_UCARIMA<-function(ucm){
+print.JD3_UCARIMA<-function(x,...){
+  ucm <- x
   print(ucm$model)
   lapply(ucm$components, function(z){print(z)})
 }
@@ -39,15 +35,11 @@ arima_node<-function(p,d,q){
   return (paste0('(', s, ')'))
 }
 
-#' Title
-#'
-#' @param m
-#'
-#' @return
+
+#' @rdname jd3_print
 #' @export
-#'
-#' @examples
-print.JD3_SARIMA<-function(m){
+print.JD3_SARIMA<-function(x, ...){
+  m <- x
   cat("SARIMA model: ", arima_node(m$p, m$d, m$q), arima_node(m$bp, m$bd, m$bq), "\n")
 
   cat("\ncoefficients\n")
@@ -70,17 +62,14 @@ print.JD3_SARIMA<-function(m){
     cat("\nscores of the coefficients\n")
     print (m$score)
   }
+  invisible(x)
 }
 
-#' Title
-#'
-#' @param m
-#'
-#' @return
+
+#' @rdname jd3_print
 #' @export
-#'
-#' @examples
-print.JD3_SARIMA_ESTIMATION<-function(m){
+print.JD3_SARIMA_ESTIMATION<-function(x, ...){
+  m <- x
 
   if (! is.null(m$phi)) p<-dim(m$phi)[2]else p<-0
   if (! is.null(m$theta)) q<-dim(m$theta)[2]else q<-0
@@ -101,17 +90,14 @@ print.JD3_SARIMA_ESTIMATION<-function(m){
     fr<-data.frame(coef=all, row.names = names)
     print(fr)
   }
+  invisible(x)
 }
 
-#' Title
-#'
-#' @param span
-#'
-#' @return
+
+#' @rdname jd3_print
 #' @export
-#'
-#' @examples
-print.JD3_SPAN<-function(span){
+print.JD3_SPAN<-function(x, ...){
+  span <- x
   type<-span$type
   d0<-span$d0
   d1<-span$d1
@@ -130,15 +116,11 @@ print.JD3_SPAN<-function(span){
   print(x)
 }
 
-#' Title
-#'
-#' @param ll
-#'
-#' @return
+
+#' @rdname jd3_print
 #' @export
-#'
-#' @examples
-print.JD3_LIKELIHOOD<-function(ll){
+print.JD3_LIKELIHOOD<-function(x, ...){
+  ll <- x
   cat("Number of observations: ", ll$nobs, "\n")
   cat("Number of effective observations: ", ll$neffectiveobs, "\n")
   cat("Number of parameters: ", ll$nparams, "\n\n")
@@ -148,17 +130,14 @@ print.JD3_LIKELIHOOD<-function(ll){
   cat("AIC: ", ll$aic, "\n")
   cat("AICC: ", ll$aicc, "\n")
   cat("BIC: ", ll$bic, "\n\n")
+  invisible(x)
 }
 
-#' Title
-#'
-#' @param rslts
-#'
-#' @return
+
+#' @rdname jd3_print
 #' @export
-#'
-#' @examples
-print.JD3_REGARIMA_RSLTS<-function(q){
+print.JD3_REGARIMA_RSLTS<-function(x, ...){
+  q <- x
   if (length(q$description$variables)>0){
     regs<-do.call("rbind", lapply(q$description$variables, function(z){z$coeff}))
     xregs<-cbind(regs, stde=NA, t=NA, pvalue=NA)
@@ -174,5 +153,6 @@ print.JD3_REGARIMA_RSLTS<-function(q){
   }else{
     cat("No regression variables\n")
   }
+  invisible(x)
 }
 
