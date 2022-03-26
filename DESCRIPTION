@@ -16,6 +16,3 @@ URL: https://github.com/jdemetra/rjd3sa
 RoxygenNote: 7.1.2
 BugReports: https://github.com/jdemetra/rjdemetra3/issues
 Encoding: UTF-8
-Collate: 
-    'display.R'
-    'zzz.R'

@@ -70,17 +70,30 @@ print.JD3_SARIMA<-function(x, ...){
 #' @rdname jd3_print
 #' @export
 print.JD3_SARIMA_ESTIMATION<-function(x, ...){
+  tables = sarima_coef_table(x, ...)
+  orders = tables$sarima_orders
+
+  cat("SARIMA model: ",
+      arima_node(orders$p, orders$d, orders$q),
+      arima_node(orders$bp, orders$bd, orders$bq),
+      "\n")
+
+  cat("\nCoefficients\n")
+  if(ncol(tables$coef_table) == 2){
+    print(tables$coef_table)
+  }else{
+    print(tables$coef_table[-2])
+  }
+  invisible(x)
+}
+sarima_coef_table <- function(x, cov = NULL, ndf = NULL,...){
   m <- x
 
   if (! is.null(m$phi)) p<-dim(m$phi)[2]else p<-0
   if (! is.null(m$theta)) q<-dim(m$theta)[2]else q<-0
   if (! is.null(m$bphi)) bp<-dim(m$bphi)[2]else bp<-0
   if (! is.null(m$btheta)) bq<-dim(m$btheta)[2]else bq<-0
-
-
-  cat("SARIMA model: ", arima_node(p, m$d, q), arima_node(bp, m$bd, bq), "\n")
-
-  cat("\ncoefficients\n")
+  sarima_orders = list(p = p, d = m$d, q = q, bp = bp, bd = m$bd, bq = bq)
   names<-NULL
   if (p > 0){names=c(names,paste0("phi(", 1:p, ')')) }
   if (q > 0){names=c(names,paste0("theta(", 1:q, ')')) }
@@ -88,10 +101,23 @@ print.JD3_SARIMA_ESTIMATION<-function(x, ...){
   if (bq > 0){names=c(names,paste0("btheta(", 1:bq,')')) }
   if (! is.null(names)){
     all<-t(cbind(m$phi, m$theta, m$bphi, m$btheta))
-    fr<-data.frame(coef=all, row.names = names)
-    print(fr)
+    fr<-as.data.frame(all, row.names = names)
+    for(i in colnames(fr)){
+      fr[,i] <- unlist(fr[,i])
+    }
+    if(!is.null(cov) & !is.null(ndf)){
+      fr$pvalue <- fr$t <- fr$stde <- NA
+      stde<-sqrt(diag(cov))
+      sel<-fr$type=='ESTIMATED'
+      t<-fr$value[sel]/stde
+      pval<-2*pt(abs(t), ndf, lower.tail = F)
+      fr$stde[sel]<-stde
+      fr$t[sel]<-t
+      fr$pvalue[sel]<-pval
+    }
   }
-  invisible(x)
+  list(sarima_orders = sarima_orders,
+       coef_table = fr)
 }
 
 
@@ -138,6 +164,25 @@ print.JD3_LIKELIHOOD<-function(x, ...){
 #' @rdname jd3_print
 #' @export
 print.JD3_REGARIMA_RSLTS<-function(x, ...){
+  cat("Log-transformation:",if(x$description$log) {"yes"} else {"no"},sep=" ")
+  cat("\n")
+  ndf<-x$estimation$likelihood$neffectiveobs-x$estimation$likelihood$nparams+1
+  print(x$description$arima, cov = x$estimation$parameters$cov,
+        ndf = ndf,
+        ...)
+  cat("Coefficients:\n")
+  cat("ARIMA:\n")
+  xregs = regarima_coef_table(x, ...)
+  if (!is.null(xregs)){
+    cat("Regression model:\n")
+    print(xregs[-2])
+  }else{
+    cat("No regression variables\n")
+  }
+  print(x$estimation$likelihood, ...)
+  invisible(x)
+}
+regarima_coef_table <- function(x,...){
   q <- x
   if (length(q$description$variables)>0){
     regs<-do.call("rbind", lapply(q$description$variables, function(z){z$coeff}))
@@ -150,10 +195,8 @@ print.JD3_REGARIMA_RSLTS<-function(x, ...){
     xregs$stde[sel]<-stde
     xregs$t[sel]<-t
     xregs$pvalue[sel]<-pval
-    print(xregs[-2])
+    xregs
   }else{
-    cat("No regression variables\n")
+    NULL
   }
-  invisible(x)
 }
-
