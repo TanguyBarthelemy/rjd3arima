@@ -42,11 +42,11 @@ df.residual.JD3_REGARIMA_RSLTS <- function(object, ...){
 
   object$estimation$likelihood$neffectiveobs - object$estimation$likelihood$nparams
 }
+#' @importFrom stats nobs
 #' @export
 nobs.JD3_REGARIMA_RSLTS <- function(object, ...){
   if (is.null(object))
     return(NULL)
-
   object$estimation$likelihood$neffectiveobs
 }
 

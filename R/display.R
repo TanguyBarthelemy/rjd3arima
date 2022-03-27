@@ -79,16 +79,45 @@ print.JD3_SARIMA_ESTIMATION<-function(x, ...){
       "\n")
 
   cat("\nCoefficients\n")
-  if(ncol(tables$coef_table) == 2){
+  if(is.null(tables$coef_table)){
+    cat("No SARIMA variables\n")
+  }else if(ncol(tables$coef_table) == 2){
     print(tables$coef_table)
   }else{
     print(tables$coef_table[-2])
   }
   invisible(x)
 }
+#' @export
+summary.JD3_SARIMA_ESTIMATION<-function(object, ...){
+  tables = sarima_coef_table(object, ...)
+  class(tables) <- "summary.JD3_SARIMA_ESTIMATION"
+  tables
+}
+
+#' @importFrom stats printCoefmat
+#' @export
+print.summary.JD3_SARIMA_ESTIMATION<-function(x, digits = max(3L, getOption("digits") - 3L), signif.stars = getOption("show.signif.stars"), ...){
+  orders = x$sarima_orders
+
+  cat("SARIMA model: ",
+      arima_node(orders$p, orders$d, orders$q),
+      arima_node(orders$bp, orders$bd, orders$bq),
+      "\n")
+
+  cat("\nCoefficients\n")
+  if(is.null(x$coef_table)){
+    cat("No SARIMA variables\n")
+  }else if(ncol(x$coef_table) == 2){
+    print(x$coef_table)
+  }else{
+    printCoefmat(x$coef_table[-2], digits = digits, signif.stars = signif.stars,
+                 na.print = "NA", ...)
+  }
+  invisible(x)
+}
 sarima_coef_table <- function(x, cov = NULL, ndf = NULL,...){
   m <- x
-
   if (! is.null(m$phi)) p<-dim(m$phi)[2]else p<-0
   if (! is.null(m$theta)) q<-dim(m$theta)[2]else q<-0
   if (! is.null(m$bphi)) bp<-dim(m$bphi)[2]else bp<-0
@@ -114,7 +143,13 @@ sarima_coef_table <- function(x, cov = NULL, ndf = NULL,...){
       fr$stde[sel]<-stde
       fr$t[sel]<-t
       fr$pvalue[sel]<-pval
+      colnames(fr) <- c("Estimate", "Type", "Std. Error",
+                           "T-stat", "Pr(>|t|)")
+    }else{
+      colnames(fr) <- c("Estimate", "Type")
     }
+  }else{
+    fr <- NULL
   }
   list(sarima_orders = sarima_orders,
        coef_table = fr)
@@ -159,20 +194,47 @@ print.JD3_LIKELIHOOD<-function(x, ...){
   cat("BIC: ", ll$bic, "\n\n")
   invisible(x)
 }
+#' @export
+summary.JD3_LIKELIHOOD<-function(object, ...){
+  res = list(nobs = object$nobs,
+       neffectiveobs = object$neffectiveobs,
+       nparams = object$nparams,
+       ll = object$ll,
+       adjustedll = object$adjustedll,
+       se = sqrt(object$ssq/object$neffectiveobs),
+       aic = object$aic,
+       aicc = object$aicc,
+       bic = object$bic)
+  class(res) <- "summary.JD3_LIKELIHOOD"
+  res
+}
+#' @export
+print.summary.JD3_LIKELIHOOD<-function(x, ...){
+  cat("Number of observations: ", x$nobs,
+      ", Number of effective observations: ", x$neffectiveobs,
+      ", Number of parameters: ", x$nparams, "\n")
+  cat("Loglikelihood: ", x$ll)
+  if (x$ll != x$adjustedll)cat(", Adjusted loglikelihood: ", x$adjustedll)
+  cat("\nStandard error of the regression (ML estimate): ", x$se, "\n")
+  cat("AIC: ", x$aic, ", ")
+  cat("AICCc ", x$aicc, ", ")
+  cat("BIC: ", x$bic, "\n")
+  invisible(x)
+}
 
 
 #' @rdname jd3_print
 #' @export
 print.JD3_REGARIMA_RSLTS<-function(x, ...){
-  cat("Log-transformation:",if(x$description$log) {"yes"} else {"no"},sep=" ")
-  cat("\n")
+  cat("Log-transformation:",if(x$description$log) {"yes"} else {"no"},
+      "\n", sep=" ")
+
   ndf<-x$estimation$likelihood$neffectiveobs-x$estimation$likelihood$nparams+1
   print(x$description$arima, cov = x$estimation$parameters$cov,
         ndf = ndf,
         ...)
-  cat("Coefficients:\n")
-  cat("ARIMA:\n")
   xregs = regarima_coef_table(x, ...)
+  cat("\n")
   if (!is.null(xregs)){
     cat("Regression model:\n")
     print(xregs[-2])
@@ -195,8 +257,41 @@ regarima_coef_table <- function(x,...){
     xregs$stde[sel]<-stde
     xregs$t[sel]<-t
     xregs$pvalue[sel]<-pval
+    colnames(xregs) <- c("Estimate", "Type", "Std. Error",
+                         "T-stat", "Pr(>|t|)")
     xregs
   }else{
     NULL
   }
+}
+#' @export
+summary.JD3_REGARIMA_RSLTS<-function(object, ...){
+  log = object$description$log
+  ndf<-object$estimation$likelihood$neffectiveobs-object$estimation$likelihood$nparams+1
+  sarima_sum <- summary(object$description$arima, cov = object$estimation$parameters$cov,
+                ndf = ndf, ...)
+  xregs = regarima_coef_table(object, ...)
+  likelihood = summary(object$estimation$likelihood)
+  res = list(log = log,
+             sarima = sarima_sum,
+             xregs = xregs,
+             likelihood = likelihood)
+  class(res) <- "summary.JD3_REGARIMA_RSLTS"
+  res
+}
+#' @export
+print.summary.JD3_REGARIMA_RSLTS <- function(x,  digits = max(3L, getOption("digits") - 3L), signif.stars = getOption("show.signif.stars"), ...){
+  cat("Log-transformation:",if(x$log) {"yes"} else {"no"},"\n",sep=" ")
+
+  print(x$sarima, digits = digits, signif.stars = signif.stars, ...)
+  cat("\n")
+  if (!is.null(x$xregs)){
+    cat("Regression model:\n")
+    printCoefmat(x$xregs[-2], digits = digits, signif.stars = signif.stars,
+                 na.print = "NA", ...)
+  }else{
+    cat("No regression variables\n")
+  }
+  print(x$likelihood, ...)
+  invisible(x)
 }
