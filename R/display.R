@@ -168,7 +168,7 @@ print.JD3_SPAN<-function(x, ...){
 
   if (type=="ALL") {x<-"All"}
   else if (type=="FROM") {x<-paste("From",d0, sep=" ")}
-  else if (type=="To") {x<-paste("Until",d1, sep=" ")}
+  else if (type=="TO") {x<-paste("Until",d1, sep=" ")}
   else if (type=="BETWEEN") {x<-paste(d0,d1,sep=" - ")}
   else if (type=="FIRST") {x<-paste("All but first",n0,"periods", sep=" ")}
   else if (type=="LAST") {x<-paste("All but last",n1,"periods", sep=" ")}
@@ -217,7 +217,7 @@ print.summary.JD3_LIKELIHOOD<-function(x, ...){
   if (x$ll != x$adjustedll)cat(", Adjusted loglikelihood: ", x$adjustedll)
   cat("\nStandard error of the regression (ML estimate): ", x$se, "\n")
   cat("AIC: ", x$aic, ", ")
-  cat("AICCc ", x$aicc, ", ")
+  cat("AICc: ", x$aicc, ", ")
   cat("BIC: ", x$bic, "\n")
   invisible(x)
 }
