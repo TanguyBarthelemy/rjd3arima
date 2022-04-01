@@ -30,9 +30,9 @@ set_outlier(
 \code{n0} and \code{n1} numerics to specify the number of periods at the beginning/end of the series to be used for the span
 (\code{type} equals to \code{"From"}, \code{"To"}) or to exclude (\code{type} equals to \code{"Excluding"}).}
 
-\item{outliers.type}{vector of characters of the outliers to be automatically detected. \code{"A0"} for additive outliers, \code{"TC"} for transitory changes
-\code{"LS"} for level shifts and \code{"S0"} for seasonal outliers.
-For example \code{outliers.type = c("A0", "LS")} to enable the detection of additive outliers and level shifts.
+\item{outliers.type}{vector of characters of the outliers to be automatically detected. \code{"AO"} for additive outliers, \code{"TC"} for transitory changes
+\code{"LS"} for level shifts and \code{"SO"} for seasonal outliers.
+For example \code{outliers.type = c("AO", "LS")} to enable the detection of additive outliers and level shifts.
 If \code{outliers.type = NULL} or \code{outliers.type = character()}, automatic detection of outliers is disabled.}
 
 \item{critical.value}{\code{numeric}. The entered critical value for the outliers' detection procedure.

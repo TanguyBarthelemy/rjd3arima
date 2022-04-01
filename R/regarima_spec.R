@@ -22,8 +22,8 @@ add_outlier.default <- function(x,
                                 date,
                                 name = sprintf("%s (%s)", type, date),
                                 coef = 0){
-  type = match.arg(tolower(type),
-                   choices = c("A0", "TC", "LS", "SO"),
+  type = match.arg(toupper(type),
+                   choices = c("AO", "TC", "LS", "SO"),
                    several.ok = TRUE)
   # data.frame to recycle arguments
   new_out <- data.frame(type, date, name, coef)
@@ -201,9 +201,9 @@ set_estimate.default <- function(x,
 #' \code{n0} and \code{n1} numerics to specify the number of periods at the beginning/end of the series to be used for the span
 #' (\code{type} equals to \code{"From"}, \code{"To"}) or to exclude (\code{type} equals to \code{"Excluding"}).
 
-#' @param outliers.type vector of characters of the outliers to be automatically detected. \code{"A0"} for additive outliers, \code{"TC"} for transitory changes
-#' \code{"LS"} for level shifts and \code{"S0"} for seasonal outliers.
-#' For example \code{outliers.type = c("A0", "LS")} to enable the detection of additive outliers and level shifts.
+#' @param outliers.type vector of characters of the outliers to be automatically detected. \code{"AO"} for additive outliers, \code{"TC"} for transitory changes
+#' \code{"LS"} for level shifts and \code{"SO"} for seasonal outliers.
+#' For example \code{outliers.type = c("AO", "LS")} to enable the detection of additive outliers and level shifts.
 #' If \code{outliers.type = NULL} or \code{outliers.type = character()}, automatic detection of outliers is disabled.
 #'
 #' @param critical.value \code{numeric}. The entered critical value for the outliers' detection procedure.
@@ -878,7 +878,7 @@ set_transform.default <- function(x,
                                   fct = NA){
   transform <- x$transform
 
-  fun = match.arg(fun[1],
+  fun = match.arg(toupper(fun[1]),
                   c(NA, "AUTO", "LOG", "NONE"))
   # to set specific TRAMO/REGARIMA values
   is_tramo <- inherits(x, "JD3_TRAMO_SPEC")
@@ -895,7 +895,7 @@ set_transform.default <- function(x,
     }
   } else {
     # REGARIMA SPECIFIC PARAMETER
-    adjust = match.arg(adjust[1],
+    adjust = match.arg(toupper(adjust[1]),
                        c(NA, "NONE", "LEAPYEAR", "LENGTHOFPERIOD"))
     if(!is.na(adjust)){
       transform$adjust = adjust
