@@ -1,4 +1,5 @@
 # Method "JD3_REGARIMA_RSLTS" for the function coef
+#' @importFrom stats coef df.residual logLik residuals vcov nobs
 #' @export
 coef.JD3_REGARIMA_RSLTS <- function(object, component = c("regression", "arima", "both"), ...){
   if (is.null(object))
@@ -42,7 +43,6 @@ df.residual.JD3_REGARIMA_RSLTS <- function(object, ...){
 
   object$estimation$likelihood$neffectiveobs - object$estimation$likelihood$nparams
 }
-#' @importFrom stats nobs
 #' @export
 nobs.JD3_REGARIMA_RSLTS <- function(object, ...){
   if (is.null(object))
