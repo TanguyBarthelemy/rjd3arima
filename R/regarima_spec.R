@@ -535,49 +535,71 @@ set_arima.default <- function(x,
     coef[is.na(coef)] <- 0
   }
 
-  if(any(!is.na(c(p, bp, q, bq)))){
+  if (any(!is.na(c(p, bp, q, bq)))) {
     np <- ifelse(is.na(p), 0, p)
     nbp <- ifelse(is.na(bp), 0, bp)
     nq <- ifelse(is.na(q), 0, q)
-    nnq <- ifelse(is.na(bq), 0, bq)
-    arima_params <- data.frame(arima_order = c(rep("p", np),
-                                               rep("phi", nq),
-                                               rep("bp", p),
-                                               rep("bphi", q)),
-                               value = coef,
-                               type = coef.type)
-    arima_params$value <- as.list(arima_params$value)
-    arima_params$type <- as.list(arima_params$type)
-    if(is.na(p)){
-      arima$phi <- t(arima_params[1:p, c("value", "type")])
-      colnames(arima$phi) <- NULL
-      arima_params <- arima_params[-c(1:p),]
+    nbq <- ifelse(is.na(bq), 0, bq)
+    if (np + nq + nbp + nbq == 0) {
+      arima_params <- NULL
+    } else {
+      arima_params <- data.frame(arima_order = c(rep("p", np),
+                                                 rep("phi", nq),
+                                                 rep("bp", nbp),
+                                                 rep("bphi", nbq)),
+                                 value = coef,
+                                 type = coef.type)
+      arima_params$value <- as.list(arima_params$value)
+      arima_params$type <- as.list(arima_params$type)
     }
-    if(is.na(q)){
-      arima$theta <- t(arima_params[1:q, c("value", "type")])
-      colnames(arima$theta) <- NULL
-      arima_params <- arima_params[-c(1:q),]
+
+
+    if (!is.na(p)) {
+      if (p == 0) {
+        arima["phi"] <- NULL
+      } else {
+        arima$phi <- t(arima_params[1:p, c("value", "type")])
+        colnames(arima$phi) <- NULL
+        arima_params <- arima_params[-c(1:p),]
+      }
     }
-    if(is.na(bp)){
-      arima$bphi <- t(arima_params[1:bp, c("value", "type")])
-      colnames(arima$bphi) <- NULL
-      arima_params <- arima_params[-c(1:bp),]
+    if (!is.na(q)) {
+      if (q == 0) {
+        arima["theta"] <- NULL
+      } else {
+        arima$theta <- t(arima_params[1:q, c("value", "type")])
+        colnames(arima$theta) <- NULL
+        arima_params <- arima_params[-c(1:q),]
+      }
     }
-    if(is.na(bq)){
-      arima$btheta <- t(arima_params[1:bq, c("value", "type")])
-      colnames(arima$btheta) <- NULL
+    if (!is.na(bp)) {
+      if (bp == 0) {
+        arima["bphi"] <- NULL
+      } else {
+        arima$bphi <- t(arima_params[1:bp, c("value", "type")])
+        colnames(arima$bphi) <- NULL
+        arima_params <- arima_params[-c(1:bp),]
+      }
+    }
+    if (!is.na(bq)) {
+      if (bq == 0) {
+        arima["btheta"] <- NULL
+      } else {
+        arima$btheta <- t(arima_params[1:bq, c("value", "type")])
+        colnames(arima$btheta) <- NULL
+      }
     }
   }
   x$arima <- arima
 
   regression <- x$regression
-  if(missing(mean.type) || any(is.na(mean.type))){
+  if (missing(mean.type) || any(is.na(mean.type))) {
     mean.type <- "UNDEFINED"
   } else {
     mean.type <- match.arg(toupper(mean.type)[1],
                            choices = c("UNDEFINED", "FIXED", "INITIAL"))
   }
-  if(is.null(mean) ||is.na(mean)){
+  if (is.null(mean) || is.na(mean)) {
     regression["mean"] <- list(NULL)
   } else {
     regression$mean$value <- mean
