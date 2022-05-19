@@ -1,7 +1,7 @@
 Package: rjd3arima
 Type: Package
 Title: Interface to 'JDemetra+ 3.0' Seasonal Adjustment Software
-Version: 0.2.0
+Version: 0.3.1
 Authors@R: c(
   person("Jean", "Palate", role = c("aut", "cre"),
                 email = "jean.palate@nbb.be"))
@@ -9,7 +9,7 @@ Description: Interface around 'JDemetra+ 3.x' arima-toolkit (<https://github.com
 Depends:
   R (>= 3.6.0)
 Imports:
-  rjd3modelling (>= 0.2.0)
+  rjd3modelling (>= 0.3.1)
 SystemRequirements: Java SE 8 or higher
 License: EUPL
 URL: https://github.com/jdemetra/rjd3sa
