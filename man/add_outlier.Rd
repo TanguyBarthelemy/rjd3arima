@@ -3,8 +3,7 @@
 \name{add_outlier}
 \alias{add_outlier}
 \alias{add_ramp}
-\title{Add Outliers/Ramps to Specification
-Generic function to add outliers to a specification}
+\title{Add Outliers/Ramps to Specification}
 \usage{
 add_outlier(x, type, date, name = sprintf("\%s (\%s)", type, date), coef = 0)
 
@@ -24,6 +23,5 @@ add_ramp(x, start, end, name = sprintf("rp.\%s - \%s", start, end), coef = 0)
 \item{start, end}{dates of the ramp regressor.}
 }
 \description{
-Add Outliers/Ramps to Specification
-Generic function to add outliers to a specification
+Generic function to add outliers to a specification.
 }

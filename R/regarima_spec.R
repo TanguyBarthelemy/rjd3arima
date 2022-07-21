@@ -1,5 +1,6 @@
 #' Add Outliers/Ramps to Specification
-#' Generic function to add outliers to a specification
+#'
+#' Generic function to add outliers to a specification.
 #'
 #' @param x the specification.
 #' @param type,date type and date of the outliers. Possible \code{type} are:
