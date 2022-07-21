@@ -10,7 +10,7 @@ Depends:
   R (>= 3.6.0)
 Imports:
   rjd3modelling (>= 0.3.2)
-SystemRequirements: Java SE 8 or higher
+SystemRequirements: Java JRE 17 or higher
 License: EUPL
 URL: https://github.com/jdemetra/rjd3sa
 RoxygenNote: 7.2.0
