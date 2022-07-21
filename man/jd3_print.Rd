@@ -17,18 +17,20 @@
 
 \method{print}{JD3_SARIMA}(x, ...)
 
-\method{print}{JD3_SARIMA_ESTIMATION}(x, ...)
+\method{print}{JD3_SARIMA_ESTIMATION}(x, digits = max(3L, getOption("digits") - 3L), ...)
 
 \method{print}{JD3_SPAN}(x, ...)
 
 \method{print}{JD3_LIKELIHOOD}(x, ...)
 
-\method{print}{JD3_REGARIMA_RSLTS}(x, ...)
+\method{print}{JD3_REGARIMA_RSLTS}(x, digits = max(3L, getOption("digits") - 3L), ...)
 }
 \arguments{
 \item{x}{the object to print.}
 
 \item{...}{further unused parameters.}
+
+\item{digits}{minimum number of significant digits to be used for most numbers.}
 }
 \description{
 JD3 print functions

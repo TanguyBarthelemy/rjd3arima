@@ -5,6 +5,7 @@ NULL
 #' JD3 print functions
 #'
 #' @param x the object to print.
+#' @param digits minimum number of significant digits to be used for most numbers.
 #' @param ... further unused parameters.
 #' @name jd3_print
 #' @rdname jd3_print
@@ -69,7 +70,7 @@ print.JD3_SARIMA<-function(x, ...){
 
 #' @rdname jd3_print
 #' @export
-print.JD3_SARIMA_ESTIMATION<-function(x, ...){
+print.JD3_SARIMA_ESTIMATION<-function(x, digits = max(3L, getOption("digits") - 3L), ...){
   tables = sarima_coef_table(x, ...)
   orders = tables$sarima_orders
 
@@ -84,7 +85,9 @@ print.JD3_SARIMA_ESTIMATION<-function(x, ...){
   }else if(ncol(tables$coef_table) == 2){
     print(tables$coef_table)
   }else{
-    print(tables$coef_table[-2])
+    printCoefmat(tables$coef_table[-2], digits = digits,
+                 P.values= FALSE,
+                 na.print = "NA", ...)
   }
   invisible(x)
 }
@@ -225,19 +228,20 @@ print.summary.JD3_LIKELIHOOD<-function(x, ...){
 
 #' @rdname jd3_print
 #' @export
-print.JD3_REGARIMA_RSLTS<-function(x, ...){
+print.JD3_REGARIMA_RSLTS<-function(x, digits = max(3L, getOption("digits") - 3L), ...){
   cat("Log-transformation:",if(x$description$log) {"yes"} else {"no"},
       "\n", sep=" ")
 
   ndf<-x$estimation$likelihood$neffectiveobs-x$estimation$likelihood$nparams+1
   print(x$description$arima, cov = x$estimation$parameters$cov,
         ndf = ndf,
+        digits = digits,
         ...)
   xregs = regarima_coef_table(x, ...)
   cat("\n")
   if (!is.null(xregs)){
     cat("Regression model:\n")
-    print(xregs[-2])
+    printCoefmat(xregs[-2], digits = digits, P.values= FALSE, na.print = "NA", ...)
   }else{
     cat("No regression variables\n")
   }
