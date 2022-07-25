@@ -17,7 +17,7 @@ Imports:
   rjd3modelling (>= 0.3.2)
 SystemRequirements: Java JRE 17 or higher
 License: EUPL
-URL: https://github.com/jdemetra/rjd3sa
+URL: https://github.com/jdemetra/rjd3arima
 RoxygenNote: 7.2.0
-BugReports: https://github.com/jdemetra/rjdemetra3/issues
+BugReports: https://github.com/jdemetra/rjd3arima/issues
 Encoding: UTF-8
