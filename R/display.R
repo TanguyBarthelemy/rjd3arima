@@ -299,3 +299,14 @@ print.summary.JD3_REGARIMA_RSLTS <- function(x,  digits = max(3L, getOption("dig
   print(x$likelihood, ...)
   invisible(x)
 }
+
+#' @importFrom rjd3toolkit diagnostics
+#' @export
+diagnostics.JD3_REGARIMA_RSLTS<-function(x, ...){
+  if (is.null(x)) return (NULL)
+  residuals_test = x$diagnostics
+  residuals_test = data.frame(Statistic = sapply(residuals_test, function(test) test[["value"]]),
+                              P.value = sapply(residuals_test, function(test) test[["pvalue"]]),
+                              Description = sapply(residuals_test, function(test) test[["description"]]))
+  residuals_test
+}
