@@ -19,6 +19,6 @@ Imports:
 SystemRequirements: Java JRE 17 or higher
 License: EUPL
 URL: https://github.com/palatej/rjd3arima
-RoxygenNote: 7.2.0
+RoxygenNote: 7.2.1
 BugReports: https://github.com/palatej/rjd3arima/issues
 Encoding: UTF-8

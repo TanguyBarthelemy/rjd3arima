@@ -2,12 +2,18 @@
 % Please edit documentation in R/regarima_spec.R
 \name{add_outlier}
 \alias{add_outlier}
+\alias{remove_outlier}
 \alias{add_ramp}
-\title{Add Outliers/Ramps to Specification}
+\alias{remove_ramp}
+\title{Manage Outliers/Ramps in Specification}
 \usage{
 add_outlier(x, type, date, name = sprintf("\%s (\%s)", type, date), coef = 0)
 
+remove_outlier(x, type = NULL, date = NULL, name = NULL)
+
 add_ramp(x, start, end, name = sprintf("rp.\%s - \%s", start, end), coef = 0)
+
+remove_ramp(x, start = NULL, end = NULL, name = NULL)
 }
 \arguments{
 \item{x}{the specification.}
@@ -23,5 +29,6 @@ add_ramp(x, start, end, name = sprintf("rp.\%s - \%s", start, end), coef = 0)
 \item{start, end}{dates of the ramp regressor.}
 }
 \description{
-Generic function to add outliers to a specification.
+Generic function to add outliers or Ramp regressors (\code{add_outlier()} and \code{add_ramp()})
+to a specification or to remove them (\code{remove_outlier()} and \code{remove_ramp()}).
 }

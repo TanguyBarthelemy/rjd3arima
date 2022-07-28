@@ -1,6 +1,7 @@
-#' Add Outliers/Ramps to Specification
+#' Manage Outliers/Ramps in Specification
 #'
-#' Generic function to add outliers to a specification.
+#' Generic function to add outliers or Ramp regressors (\code{add_outlier()} and \code{add_ramp()})
+#' to a specification or to remove them (\code{remove_outlier()} and \code{remove_ramp()}).
 #'
 #' @param x the specification.
 #' @param type,date type and date of the outliers. Possible \code{type} are:
@@ -48,6 +49,48 @@ add_outlier.default <- function(x,
 }
 #' @rdname add_outlier
 #' @export
+remove_outlier <- function(x,
+                           type = NULL,
+                           date = NULL,
+                           name = NULL){
+  UseMethod("remove_outlier", x)
+}
+#' @export
+remove_outlier.default <- function(x,
+                                type = NULL,
+                                date = NULL,
+                                name = NULL){
+  if (is.null(x$regression$outliers))
+    return (x)
+  out_mat = simplify2array(x$regression$outliers)[c("code", "pos", "name"),, drop = FALSE]
+  if (is.null(type)) {
+    out_mat["code",] = ""
+  } else {
+    type = match.arg(toupper(type),
+                     choices = c("AO", "TC", "LS", "SO"),
+                     several.ok = TRUE)
+  }
+  if (is.null(date)) {
+    out_mat["pos",] = ""
+  }
+  if (is.null(name)) {
+    out_mat["name",] = ""
+  }
+  out_id = apply(out_mat,2, paste0, collapse = "")
+  rm_out_id = rbind(type = type, date = date, name = name)
+  if (is.null(rm_out_id))
+    return (x)
+  rm_out_id = apply(rm_out_id,2, paste0, collapse = "")
+
+  remove_out = out_id %in% rm_out_id
+  x$regression$outliers <- x$regression$outliers[!remove_out]
+  if (length(x$regression$outliers) == 0) {
+    x$regression["outliers"] = list(NULL)
+  }
+  x
+}
+#' @rdname add_outlier
+#' @export
 add_ramp <- function(x,
                      start,
                      end,
@@ -78,6 +121,45 @@ add_ramp.default <- function(x,
   if(any(dupl_out)){
     warning("Duplicated ramps removed")
     x$regression$ramps <- x$regression$ramps[!dupl_out]
+  }
+  x
+}
+
+#' @rdname add_outlier
+#' @export
+remove_ramp <- function(x,
+                     start = NULL,
+                     end = NULL,
+                     name = NULL){
+  UseMethod("remove_ramp", x)
+}
+#' @export
+remove_ramp.default <- function(x,
+                                start = NULL,
+                                end = NULL,
+                                name = NULL){
+  if (is.null(x$regression$ramps))
+    return (x)
+  rp_mat = simplify2array(x$regression$ramps)[c("start", "end", "name"),, drop = FALSE]
+  if (is.null(start)) {
+    rp_mat["start",] = ""
+  }
+  if (is.null(end)) {
+    rp_mat["end",] = ""
+  }
+  if (is.null(name)) {
+    rp_mat["name",] = ""
+  }
+  rp_id = apply(rp_mat,2, paste0, collapse = "")
+  rm_rp_id = rbind(start = start, end = end, name = name)
+  if (is.null(rm_rp_id))
+    return (x)
+  rm_rp_id = apply(rm_rp_id,2, paste0, collapse = "")
+
+  remove_rp = rp_id %in% rm_rp_id
+  x$regression$ramps <- x$regression$ramps[!remove_rp]
+  if (length(x$regression$ramps) == 0) {
+    x$regression["ramps"] = list(NULL)
   }
   x
 }
