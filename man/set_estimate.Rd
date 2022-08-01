@@ -19,35 +19,7 @@ set_estimate(
 \arguments{
 \item{x}{the specification.}
 
-\item{type}{parameters to specifiy the span of to be used.
-
-\code{d0} and \code{d1} characters in the format "YYYY-MM-DD" to specify first/last date of the span when \code{type} equals to \code{"From"}, \code{"To"} or \code{"Between"}.
-
-\code{n0} and \code{n1} numerics to specify the number of periods at the beginning/end of the series to be used for the span
-(\code{type} equals to \code{"From"}, \code{"To"}) or to exclude (\code{type} equals to \code{"Excluding"}).}
-
-\item{d0}{parameters to specifiy the span of to be used.
-
-\code{d0} and \code{d1} characters in the format "YYYY-MM-DD" to specify first/last date of the span when \code{type} equals to \code{"From"}, \code{"To"} or \code{"Between"}.
-
-\code{n0} and \code{n1} numerics to specify the number of periods at the beginning/end of the series to be used for the span
-(\code{type} equals to \code{"From"}, \code{"To"}) or to exclude (\code{type} equals to \code{"Excluding"}).}
-
-\item{d1}{parameters to specifiy the span of to be used.
-
-\code{d0} and \code{d1} characters in the format "YYYY-MM-DD" to specify first/last date of the span when \code{type} equals to \code{"From"}, \code{"To"} or \code{"Between"}.
-
-\code{n0} and \code{n1} numerics to specify the number of periods at the beginning/end of the series to be used for the span
-(\code{type} equals to \code{"From"}, \code{"To"}) or to exclude (\code{type} equals to \code{"Excluding"}).}
-
-\item{n0}{parameters to specifiy the span of to be used.
-
-\code{d0} and \code{d1} characters in the format "YYYY-MM-DD" to specify first/last date of the span when \code{type} equals to \code{"From"}, \code{"To"} or \code{"Between"}.
-
-\code{n0} and \code{n1} numerics to specify the number of periods at the beginning/end of the series to be used for the span
-(\code{type} equals to \code{"From"}, \code{"To"}) or to exclude (\code{type} equals to \code{"Excluding"}).}
-
-\item{n1}{parameters to specifiy the span of to be used.
+\item{type, d0, d1, n0, n1}{parameters to specifiy the span of to be used.
 
 \code{d0} and \code{d1} characters in the format "YYYY-MM-DD" to specify first/last date of the span when \code{type} equals to \code{"From"}, \code{"To"} or \code{"Between"}.
 
