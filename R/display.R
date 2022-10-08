@@ -37,60 +37,17 @@ arima_node<-function(p,d,q){
   return (paste0('(', s, ')'))
 }
 
-
 #' @rdname jd3_print
 #' @export
 print.JD3_SARIMA<-function(x, ...){
   m <- x
-  cat("SARIMA model: ", arima_node(m$p, m$d, m$q), arima_node(m$bp, m$bd, m$bq), "\n")
-
-  cat("\ncoefficients\n")
-  if (length(m$parameters > 0)){
-    names<-NULL
-    e<-sqrt(diag(m$covariance))
-    if (m$p > 0){names=c(names,paste("phi", 1:m$p, sep='-')) }
-    if (m$bp > 0){names=c(names,paste("bphi", 1:m$bp, sep='-')) }
-    if (m$q > 0){names=c(names,paste("theta", 1:m$q, sep='-')) }
-    if (m$bq > 0){names=c(names,paste("btheta", 1:m$bq, sep='-')) }
-    q<-data.frame(coef=m$parameters, stde=e, row.names = names)
-    print(q)
-
-    cat("\ncorrelation of the coefficients\n")
-    corr<- m$covariance/e%*%t(e)
-    corr<-`row.names<-`(corr, names)
-    corr<-`colnames<-`(corr, names)
-    print(corr)
-
-    cat("\nscores of the coefficients\n")
-    print (m$score)
-  }
-  invisible(x)
+  cat("SARIMA model: ", arima_node(length(m$phi), m$d, length(m$theta)), arima_node(length(m$bphi), m$bd, length(m$btheta)), m$period, "\n")
+  if (length(m$phi)>0) cat("phi: ", m$phi, "\n")
+  if (length(m$theta)>0)cat("theta: ", m$theta, "\n")
+  if (length(m$bphi)>0) cat("bphi: ", m$bphi, "\n")
+  if (length(m$btheta)>0)cat("btheta: ", m$btheta, "\n")
 }
 
-
-#' @rdname jd3_print
-#' @export
-print.JD3_SARIMA_ESTIMATION<-function(x, digits = max(3L, getOption("digits") - 3L), ...){
-  tables = sarima_coef_table(x, ...)
-  orders = tables$sarima_orders
-
-  cat("SARIMA model: ",
-      arima_node(orders$p, orders$d, orders$q),
-      arima_node(orders$bp, orders$bd, orders$bq),
-      "\n")
-
-  cat("\nCoefficients\n")
-  if(is.null(tables$coef_table)){
-    cat("No SARIMA variables\n")
-  }else if(ncol(tables$coef_table) == 2){
-    print(tables$coef_table)
-  }else{
-    printCoefmat(tables$coef_table[-2], digits = digits,
-                 P.values= FALSE,
-                 na.print = "NA", ...)
-  }
-  invisible(x)
-}
 #' @export
 summary.JD3_SARIMA_ESTIMATION<-function(object, ...){
   tables = sarima_coef_table(object, ...)
