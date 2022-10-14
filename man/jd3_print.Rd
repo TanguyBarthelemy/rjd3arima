@@ -5,6 +5,7 @@
 \alias{print.JD3_ARIMA}
 \alias{print.JD3_UCARIMA}
 \alias{print.JD3_SARIMA}
+\alias{print.JD3_SARIMA_ESTIMATION}
 \alias{print.JD3_SPAN}
 \alias{print.JD3_LIKELIHOOD}
 \alias{print.JD3_REGARIMA_RSLTS}
@@ -15,6 +16,8 @@
 \method{print}{JD3_UCARIMA}(x, ...)
 
 \method{print}{JD3_SARIMA}(x, ...)
+
+\method{print}{JD3_SARIMA_ESTIMATION}(x, digits = max(3L, getOption("digits") - 3L), ...)
 
 \method{print}{JD3_SPAN}(x, ...)
 
