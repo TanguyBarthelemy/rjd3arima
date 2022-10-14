@@ -72,26 +72,6 @@ print.JD3_SARIMA_ESTIMATION<-function(x, digits = max(3L, getOption("digits") - 
 }
 
 #' @export
-print.JD3_SARIMA_ESTIMATION<-function(object, digits = max(3L, getOption("digits") - 3L), ...){
-  x = sarima_coef_table(object, ...)
-  orders = x$sarima_orders
-  cat("SARIMA model: ",
-      arima_node(orders$p, orders$d, orders$q),
-      arima_node(orders$bp, orders$bd, orders$bq),
-      "\n")
-
-  cat("\nCoefficients\n")
-  if(is.null(x$coef_table)){
-    cat("No SARIMA variables\n")
-  }else if(ncol(x$coef_table) == 2){
-    print(x$coef_table)
-  }else{
-    printCoefmat(x$coef_table[-2], digits = digits, P.values= FALSE,
-                 na.print = "NA", ...)
-  }
-}
-
-#' @export
 summary.JD3_SARIMA_ESTIMATION<-function(object, ...){
   tables = sarima_coef_table(object, ...)
   class(tables) <- "summary.JD3_SARIMA_ESTIMATION"
