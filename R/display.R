@@ -47,6 +47,29 @@ print.JD3_SARIMA<-function(x, ...){
   if (length(m$bphi)>0) cat("bphi: ", m$bphi, "\n")
   if (length(m$btheta)>0)cat("btheta: ", m$btheta, "\n")
 }
+#' @rdname jd3_print
+#' @export
+print.JD3_SARIMA_ESTIMATION<-function(x, digits = max(3L, getOption("digits") - 3L), ...){
+  tables = sarima_coef_table(x, ...)
+  orders = tables$sarima_orders
+
+  cat("SARIMA model: ",
+      arima_node(orders$p, orders$d, orders$q),
+      arima_node(orders$bp, orders$bd, orders$bq),
+      "\n")
+
+  cat("\nCoefficients\n")
+  if(is.null(tables$coef_table)){
+    cat("No SARIMA variables\n")
+  }else if(ncol(tables$coef_table) == 2){
+    print(tables$coef_table)
+  }else{
+    printCoefmat(tables$coef_table[-2], digits = digits,
+                 P.values= FALSE,
+                 na.print = "NA", ...)
+  }
+  invisible(x)
+}
 
 #' @export
 summary.JD3_SARIMA_ESTIMATION<-function(object, ...){
@@ -54,6 +77,7 @@ summary.JD3_SARIMA_ESTIMATION<-function(object, ...){
   class(tables) <- "summary.JD3_SARIMA_ESTIMATION"
   tables
 }
+
 
 #' @importFrom stats printCoefmat
 #' @export
