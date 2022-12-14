@@ -232,7 +232,7 @@ print.JD3_REGARIMA_RSLTS<-function(x, digits = max(3L, getOption("digits") - 3L)
 regarima_coef_table <- function(x,...){
   q <- x
   if (length(q$description$variables)>0){
-    regs<-do.call("rbind", lapply(q$description$variables, function(z){z$coeff}))
+    regs<-do.call("rbind", lapply(q$description$variables, function(z){z$coef}))
     xregs<-cbind(regs, stde=NA, t=NA, pvalue=NA)
     stde<-sqrt(diag(q$estimation$bvar))
     sel<-xregs$type=='ESTIMATED'
